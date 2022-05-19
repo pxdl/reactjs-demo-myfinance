@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRoot } from "react-dom/client";
 import { createServer } from 'miragejs';
 import { App } from './App';
@@ -11,7 +10,7 @@ createServer({
       return [
         {
           id: 1,
-          title: 'Transactionn 1',
+          title: 'Transaction 1',
           amount: '400',
           type: 'deposit',
           category: 'Food',
@@ -25,7 +24,7 @@ createServer({
 const container = document.getElementById('root');
 const root = createRoot(container!);
 root.render(
-  <React.StrictMode>
+  //<React.StrictMode>
     <App />
-  </React.StrictMode>
+  //</React.StrictMode>
 );
