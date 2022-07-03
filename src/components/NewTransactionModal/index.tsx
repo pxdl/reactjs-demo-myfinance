@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Modal from "react-modal";
 import closeImg from '../../assets/close.svg'
 import incomeImg from '../../assets/income.svg'
 import expenditureImg from '../../assets/expenditure.svg'
 
-import { Container, TransactionTypeContainer, TransactionTypeButton } from "./styles";
+import { Container, TypeContainer, TypeButton } from "./styles";
+import { api } from "../../services/api";
 
 interface NewTransactionModalProps {
   isOpen: boolean;
@@ -12,7 +13,23 @@ interface NewTransactionModalProps {
 }
 
 export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionModalProps) {
-  const [transactionType, setTransactionType] = useState('deposit');
+  const [name, setTransactionName]         = useState('');
+  const [amount, setTransactionAmount]     = useState(0);
+  const [type, setType]                    = useState('deposit');
+  const [category, setTransactionCategory] = useState('');
+
+  function handleCreateNewTransaction(event: FormEvent) {
+    event.preventDefault();
+
+    const data = {
+      name,
+      amount,
+      type,
+      category
+    };
+
+    api.post('transactions', data);
+  }
 
   return (
     <Modal
@@ -29,17 +46,28 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
         <img src={closeImg} alt="Close modal" />
       </button>
 
-      <Container>
+      <Container onSubmit={handleCreateNewTransaction}>
         <h2>Add transaction</h2>
 
-        <input type="text" placeholder="Name" />
-        <input type="text" placeholder="Amount" inputMode="numeric" />
+        <input
+          type="text"
+          placeholder="Name"
+          value={name} 
+          onChange={event => setTransactionName(event.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Amount"
+          value={amount}
+          onChange={event => setTransactionAmount(Number(event.target.value))}
+          inputMode="numeric"
+        />
         
-        <TransactionTypeContainer>
-          <TransactionTypeButton
+        <TypeContainer>
+          <TypeButton
             type="button"
-            onClick={() => {setTransactionType('deposit')}}
-            isActive={transactionType === 'deposit'}
+            onClick={() => {setType('deposit')}}
+            isActive={type === 'deposit'}
             activeColor='green'
           >
             <img
@@ -47,12 +75,12 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
               alt="Income"
             />
             <span>Income</span>
-          </TransactionTypeButton>
+          </TypeButton>
 
-          <TransactionTypeButton
+          <TypeButton
             type="button"
-            onClick={() => {setTransactionType('withdrawal')}}
-            isActive={transactionType === 'withdrawal'}
+            onClick={() => {setType('withdrawal')}}
+            isActive={type === 'withdrawal'}
             activeColor="red"
           >
             <img
@@ -60,10 +88,15 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
               alt="Expenditure"
             />
             <span>Expenditure</span>
-          </TransactionTypeButton>
-        </TransactionTypeContainer>
+          </TypeButton>
+        </TypeContainer>
         
-        <input type="text" placeholder="Category" />
+        <input
+          type="text"
+          placeholder="Category"
+          value={category}
+          onChange={event => setTransactionCategory(event.target.value)}
+        />
 
         <button type="submit">Add</button>
       </Container>

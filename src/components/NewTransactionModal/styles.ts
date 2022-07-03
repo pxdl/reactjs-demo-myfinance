@@ -64,13 +64,13 @@ export const Container = styled.form`
     }
 `
 
-export const TransactionTypeContainer = styled.div`
+export const TypeContainer = styled.div`
     margin: 1rem 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
 `
-interface TransactionTypeButtonProps {
+interface TypeButtonProps {
     isActive: boolean;
     activeColor: 'red' | 'green';
 }
@@ -80,7 +80,7 @@ const colors = {
     green: '#33cc95'
 }
 
-export const TransactionTypeButton = styled.button<TransactionTypeButtonProps>`
+export const TypeButton = styled.button<TypeButtonProps>`
     height: 4rem;
     border: 1px solid #d7d7d7;
     border-radius: 0.25rem;
