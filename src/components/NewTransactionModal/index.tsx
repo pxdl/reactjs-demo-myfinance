@@ -1,11 +1,12 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import Modal from "react-modal";
+import { TransactionsContext, TransactionType } from "../../TransactionsContext";
+
 import closeImg from '../../assets/close.svg'
 import incomeImg from '../../assets/income.svg'
 import expenditureImg from '../../assets/expenditure.svg'
 
 import { Container, TypeContainer, TypeButton } from "./styles";
-import { api } from "../../services/api";
 
 interface NewTransactionModalProps {
   isOpen: boolean;
@@ -13,22 +14,30 @@ interface NewTransactionModalProps {
 }
 
 export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionModalProps) {
+  const { addTransaction } = useContext(TransactionsContext);
+
   const [name, setTransactionName]         = useState('');
   const [amount, setTransactionAmount]     = useState(0);
-  const [type, setType]                    = useState('deposit');
+  const [type, setTransactionType]         = useState('deposit');
   const [category, setTransactionCategory] = useState('');
 
-  function handleCreateNewTransaction(event: FormEvent) {
+  async function handleCreateNewTransaction(event: FormEvent) {
     event.preventDefault();
 
-    const data = {
-      name,
-      amount,
-      type,
-      category
-    };
+    await addTransaction({
+      name: name,
+      amount: amount,
+      type: type as TransactionType,
+      category: category
+    });
 
-    api.post('transactions', data);
+    // Clear modal fields
+    setTransactionName('');
+    setTransactionAmount(0);
+    setTransactionType('deposit');
+    setTransactionCategory('');
+
+    onRequestClose();
   }
 
   return (
@@ -66,7 +75,7 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
         <TypeContainer>
           <TypeButton
             type="button"
-            onClick={() => {setType('deposit')}}
+            onClick={() => {setTransactionType('deposit')}}
             isActive={type === 'deposit'}
             activeColor='green'
           >
@@ -79,7 +88,7 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
 
           <TypeButton
             type="button"
-            onClick={() => {setType('withdrawal')}}
+            onClick={() => {setTransactionType('withdrawal')}}
             isActive={type === 'withdrawal'}
             activeColor="red"
           >
