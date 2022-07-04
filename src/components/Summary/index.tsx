@@ -1,11 +1,11 @@
 import { useTransactions } from "../../hooks/useTransactions";
-import { Currency } from "../Currency";
 
 import incomeImg from '../../assets/income.svg';
 import expenditureImg from '../../assets/expenditure.svg';
 import totalImg from '../../assets/total.svg'
 
 import { Container } from "./styles";
+import { formatPrice } from "../../util/formatPrice";
 
 export function Summary() {
   const { transactions } = useTransactions();
@@ -35,7 +35,7 @@ export function Summary() {
           <img src={incomeImg} alt="Entradas" />
         </header>
         <strong>
-          <Currency amount={summary.totalDeposits} />
+          {formatPrice(summary.totalDeposits)}
         </strong>
       </div>
       <div>
@@ -44,7 +44,7 @@ export function Summary() {
           <img src={expenditureImg} alt="Saídas" />
         </header>
         <strong>
-          <Currency amount={summary.totalExpenditures} />
+          {formatPrice(summary.totalExpenditures)}
         </strong>
       </div>
       <div>
@@ -53,7 +53,7 @@ export function Summary() {
           <img src={totalImg} alt="Total" />
         </header>
         <strong>
-          <Currency amount={summary.total} />
+          {formatPrice(summary.total)}
         </strong>
       </div>
     </Container>

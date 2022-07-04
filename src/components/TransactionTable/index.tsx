@@ -1,5 +1,5 @@
 import { useTransactions } from "../../hooks/useTransactions";
-import { Currency } from "../Currency";
+import { formatPrice } from "../../util/formatPrice";
 
 import { Container } from "./styles";
 
@@ -23,7 +23,7 @@ export function TransactionTable() {
             <tr key={transaction.id}>
               <td>{transaction.name}</td>
               <td className={transaction.type}>
-              <Currency amount={transaction.amount} />
+                {formatPrice(transaction.amount)}
               </td>
               <td>{transaction.category}</td>
               <td>
